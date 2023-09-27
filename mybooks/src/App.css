@@ -11,7 +11,10 @@ body {
   align-items: center;
   min-height: 100vh;
   font-size: 1.5rem;
-  background: linear-gradient(#f9b28f, #f17280, #c06c86, #6d5c80,#325c7f);
+  background-image: url('back.png');
+  background-repeat: no-repeat;
+  background-size: 100%;
+  /*background: linear-gradient(#f9b28f, #f17280, #c06c86, #6d5c80,#325c7f); */
 
   
 }
@@ -19,8 +22,4 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-.pngBook{
-display: flex;
-
 }

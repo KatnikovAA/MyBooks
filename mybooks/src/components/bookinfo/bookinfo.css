@@ -1,0 +1,44 @@
+.bookValue{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.bookTitle{
+    size: 20px;
+    padding: 10px;
+}
+
+.bookDescription{
+    size: 14px;
+    width: 700px;
+    height: 300px;
+}
+.BookPublishedDate{
+    display: flex;
+    flex-direction: row;
+}
+.bookTextSnippet{
+    display: flex;
+    flex-direction: row;
+}
+
+.bookLanguage{
+    display: flex;
+    flex-direction: row;
+}
+
+.info{
+    padding-left: 10px;
+    width: 300px;
+    height: auto;
+}
+.bookAuthors{
+    display: flex;
+    flex-direction: row;
+}
+.bookCategories{
+    display: flex;
+    flex-direction: row;
+}
