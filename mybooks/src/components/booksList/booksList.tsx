@@ -23,14 +23,32 @@ interface apiBook {
 }
 
 type Props= {
-    apiBookSearch:apiBook
+    apiBookSearch:apiBook,
+    detailViewBook:any,
 }
-export const BooksList = ({apiBookSearch}:Props) => {
+export const BooksList = ({apiBookSearch,detailViewBook}:Props) => {
+
+    const heandelClicklBooksList = (e) => {
+        detailViewBook(apiBookSearch);
+        console.log(apiBookSearch)
+    }
+    if(!apiBookSearch) {
+        return (
+        <> </>
+        )
+    }
+    if(apiBookSearch.volumeInfo.title.length > 16){
+        apiBookSearch.volumeInfo.title.split("").slice(0,16).join("")
+    }
     return(
-        <div className="BooksList">
+        <div className="BooksList" onClick={heandelClicklBooksList}>
             <img className="imgBook" src={apiBookSearch.volumeInfo.imageLinks.thumbnail}></img>
             <div className="bookTitle">
-                {
+                {   
+                    apiBookSearch.volumeInfo.title.length > 16 
+                    ?
+                    apiBookSearch.volumeInfo.title.split("").slice(0,13).join("") + "..."
+                    :
                     apiBookSearch.volumeInfo.title
                 }
             </div>
@@ -38,23 +56,34 @@ export const BooksList = ({apiBookSearch}:Props) => {
             <div className="BookPublishedDate">
                 <div className="info">{apiBookSearch.volumeInfo.publishedDate}</div>
             </div>
-            <div className="bookAuthors"> 
-                <div className="info">
-                    {
-                        apiBookSearch.volumeInfo.authors[0]
-                    }
+            
+            {  
+            apiBookSearch.volumeInfo.authors
+            &&  
+           <div className="bookAuthors"> 
+                    <div className="info">
+                        {
+                            apiBookSearch.volumeInfo.authors[0]
+                        }
                     </div>
             </div>
+            }
+
+            {
+            apiBookSearch.volumeInfo.categories
+            &&    
             <div className="bookCategories"> 
                 <div className="info">
                     {
                         apiBookSearch.volumeInfo.categories[0]
                     }
                 </div>
+            </div>
+            }  
             <div className="bookLanguage"> 
                 <div className="info">{apiBookSearch.volumeInfo.language.toUpperCase()}</div>
             </div>
-            </div>
         </div>
+        
     )
 }
