@@ -1,4 +1,5 @@
 import React from "react";
+import { useDebounce } from "@uidotdev/usehooks"
 // @ts-ignore
 import { SearchText } from "../searchText/searchText.tsx";
 // @ts-ignore
@@ -42,16 +43,27 @@ const[valueSearchText,setValueSearchText] = useState<any>();
 const[clickButtonFind,setClickButtonFind] = useState<any>(false);
 const[apiBookSearch,setApiBookSearch] = useState<apiBook>()
 const[flgDetailsInfoBook,setFlgDetailsInfoBook] = useState<boolean>(false)
-const[detailsInfoBook,setDetailsInfoBook] = useState<object|null>()
+const[detailsInfoBook,setDetailsInfoBook] = useState<apiBook | null>()
 
 useEffect(()=>{
     if(clickButtonFind){
         callApi(valueSearchText)
-        .then(promise => setApiBookSearch(promise));
-        console.log(apiBookSearch)
+            .then(promise => setApiBookSearch(promise));
+            console.log(apiBookSearch)
     }
 
 },[clickButtonFind])
+
+useEffect(() =>{
+    document.addEventListener("keydown", handlerEnterPress)
+},[valueSearchText])
+
+const handlerEnterPress = (e) =>{
+    if(e.key === 'Enter'){
+        handlerButtonClick();
+    }
+    
+}
 
 const handlerSearchTextOnChange = (value:number | String | undefined):void =>{
   setValueSearchText(value)
@@ -59,15 +71,21 @@ const handlerSearchTextOnChange = (value:number | String | undefined):void =>{
 
 const handlerButtonClick = ():void => {
     setClickButtonFind(valueSearchText)
+    console.log("првиет")
 }
 
-const heandelClickMain = () =>{
-    if(flgDetailsInfoBook == null)
+const handlerButtonClose = ():void => {
+    setFlgDetailsInfoBook(false)
+    setDetailsInfoBook(null)
+    console.log("handlerButtonClose")
+}
+
+
+const heandelClickCloseModal = () =>{
     {
-    
-        setFlgDetailsInfoBook(false)
-        setDetailsInfoBook(null)
-        console.log("приватевфыв")
+        flgDetailsInfoBook &&
+            setFlgDetailsInfoBook(false)
+            setDetailsInfoBook(null)
     }
 }
 
@@ -77,23 +95,21 @@ const detailViewBook = (book:apiBook):any =>{
     console.log(book)
 }
     return(
-        <div className="main" onClick={heandelClickMain}>
-            <div className="header">
-                <Header/>
+        <div className="main" >
+            <div className="header" >
+                <Header apiBookSearch={apiBookSearch} handlerSearchTextOnChange={handlerSearchTextOnChange} handlerButtonClick={handlerButtonClick}/>
             </div >
             <div className="mainContent">
                 {
                     apiBookSearch ?
                     <div className="BooksListArr">{
                         apiBookSearch.map((book:apiBook) => {
-                        return <BooksList detailViewBook={detailViewBook} apiBookSearch={book} key={book.id}></BooksList>
+                            return <BooksList detailViewBook={detailViewBook} apiBookSearch={book} key={book.id}></BooksList>
                         })
-                    }
-                        
-                        
+                    }                     
                     </div>
                     :
-                    <div className="mainBlock">
+                    <div className="mainBlock">                       
                         <div className="searchBlock">
                             <SearchText handlerSearchTextOnChange={handlerSearchTextOnChange}></SearchText>
                             <Button text="Find" handlerButtonClick={handlerButtonClick}></Button>
@@ -104,10 +120,12 @@ const detailViewBook = (book:apiBook):any =>{
 
             {
                 detailsInfoBook 
-                &&     
-                <div className="viewDetailInfoBook">
-                    
-                    <Bookinfo apiBookSearchProps = {detailsInfoBook}></Bookinfo>
+                &&    
+                <div>
+                    <div className="closeModal" onClick={heandelClickCloseModal}></div>
+                    <div className="viewDetailInfoBook">                       
+                        <Bookinfo apiBookSearchProps = {detailsInfoBook} handlerButtonClose={handlerButtonClose}></Bookinfo>
+                    </div> 
                 </div> 
             }       
         </div>

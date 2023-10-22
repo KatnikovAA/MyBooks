@@ -1,7 +1,12 @@
 import React from "react"
 import './bookinfo.css';
+// @ts-ignore
+import { Button } from "../button/button.tsx";
 
-interface apiBook {
+type obj  = []
+
+interface apiBook extends obj {
+    
     items:Number;
     id:string; 
     searchInfo:{
@@ -23,10 +28,11 @@ interface apiBook {
 }
 
 type Props= {
-    apiBookSearchProps:apiBook
+    apiBookSearchProps:apiBook,
+    handlerButtonClose?:any
 }
 
-export const Bookinfo:React.FC<Props> = ({apiBookSearchProps}:Props) =>{
+export const Bookinfo:React.FC<Props> = ({apiBookSearchProps,handlerButtonClose}:Props) =>{
     return(
         <div className="detailsBookValue">
             <div className="detailsImgBook">
@@ -75,8 +81,10 @@ export const Bookinfo:React.FC<Props> = ({apiBookSearchProps}:Props) =>{
                         </div>
                 </div>
                 }
+                <div className="closeButton">
+                    <Button text="Close" handlerButtonClose={handlerButtonClose}></Button>
+                </div>
             </div>
-
         </div>
         
     )

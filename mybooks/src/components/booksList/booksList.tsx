@@ -42,7 +42,11 @@ export const BooksList = ({apiBookSearch,detailViewBook}:Props) => {
     }
     return(
         <div className="BooksList" onClick={heandelClicklBooksList}>
-            <img className="imgBook" src={apiBookSearch.volumeInfo.imageLinks.thumbnail}></img>
+            {
+                apiBookSearch.volumeInfo.imageLinks.thumbnail 
+                && 
+                <img className="imgBook" src={apiBookSearch.volumeInfo.imageLinks.thumbnail}></img>
+            }
             <div className="bookTitle">
                 {   
                     apiBookSearch.volumeInfo.title.length > 16 
