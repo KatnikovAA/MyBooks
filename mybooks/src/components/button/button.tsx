@@ -1,20 +1,27 @@
 import React from "react"
 import './button.css';
-import { useEffect } from "react";
 
 type props = {
     text:string;
-    handlerButtonClick?:any;
-    handlerButtonClose?:any;
+    handlerButtonClick?:() => void | undefined;
+    handlerButtonClose?:() => void;
 }
-
 
 export const Button:React.FC<props> = ({text,handlerButtonClick,handlerButtonClose}:props) => {
 
-    const handlerOnClick = () =>{
-        handlerButtonClose ? 
+    const handlerOnClick = ():void =>{
+       /* handlerButtonClose ? 
         handlerButtonClose() :
         handlerButtonClick();
+        */
+        if(typeof( handlerButtonClose) == "function"){
+            handlerButtonClose()
+        } else {
+            if(typeof( handlerButtonClick) == "function"){
+                handlerButtonClick()
+            }
+        }
+        
     }
 
     return(

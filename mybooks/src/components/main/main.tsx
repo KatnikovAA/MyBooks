@@ -1,23 +1,21 @@
 import React from "react";
-
-import { useDebounce } from "@uidotdev/usehooks"
-// @ts-ignore
+import { useDispatch , useSelector } from "react-redux";
+import { inboundApiBook,openModal,ditalBookApi } from "../../redux/action.ts";
 import { SearchText } from "../searchText/searchText.tsx";
-// @ts-ignore
 import { Bookinfo } from "../bookinfo/bookinfo.tsx";
-// @ts-ignore
 import { Button } from "../button/button.tsx";
-// @ts-ignore
 import { BooksList } from "../booksList/booksList.tsx";
+import { useAppDispatch, useAppSelector } from "../../hook.ts";
+// ошибка tsx 
 // @ts-ignore
 import { Header } from "../header/header.tsx";
-import { useState,useEffect } from "react";
-import { callApi } from "../api.js";
+import { useState } from "react";
+import { callApi } from "../api.ts";
 import './main.css';
+
 type obj  = []
 
 interface apiBook extends obj {
-    
     items:Number;
     id:string; 
     searchInfo:{
@@ -38,97 +36,85 @@ interface apiBook extends obj {
     };
 }
 
-export const Main:React.FC  = () =>{
+export const Main:React.FC  = () => {
 
-const[valueSearchText,setValueSearchText] = useState<any>();
-const[clickButtonFind,setClickButtonFind] = useState<any>(false);
-const[apiBookSearch,setApiBookSearch] = useState<apiBook>()
-const[flgDetailsInfoBook,setFlgDetailsInfoBook] = useState<boolean>(false)
-const[detailsInfoBook,setDetailsInfoBook] = useState<apiBook | null>()
+    const dispatch = useAppDispatch();
+    const boolClickBook = useAppSelector((state)=>state.clickOnBookReducers.boolean)
+    const searchText = useAppSelector((state)=> state.valueTextForSearch.valueText)
+    const valueApi = useAppSelector((state)=> state.inboundApiBookReducers1.valueApiBooks)
+    const ditalBook = useAppSelector((state)=> state.ditalBookReducers.ditalBook)
 
-useEffect(()=>{
-    if(clickButtonFind){
-        callApi(valueSearchText)
-            .then(promise => setApiBookSearch(promise));
-            console.log(apiBookSearch)
+
+
+
+    const handlerSearchTextOnChange = (value:number | String | undefined):void =>{
+        //setValueSearchText(value)
+        //dispatch(changeValueText(value))
     }
 
-},[clickButtonFind])
+    const handlerButtonClick = ():void => {
+        callApi(searchText)
+        .then(promise => dispatch(inboundApiBook(promise)));
+        //.then(promise => setApiBookSearch(promise));
+    }       
 
-useEffect(() =>{
-    document.addEventListener("keydown", handlerEnterPress)
-},[valueSearchText])
-
-const handlerEnterPress = (e) =>{
-    if(e.key === 'Enter'){
-        handlerButtonClick();
+    const closeModalBook = ():void =>{
+        dispatch(openModal())           //закрыть модалку проставив в булиан false
+        dispatch(ditalBookApi(null))
     }
-    
-}
-
-const handlerSearchTextOnChange = (value:number | String | undefined):void =>{
-  setValueSearchText(value)
-}
-
-const handlerButtonClick = ():void => {
-    setClickButtonFind(valueSearchText)
-    console.log("првиет")
-}
-
-const handlerButtonClose = ():void => {
-    setFlgDetailsInfoBook(false)
-    setDetailsInfoBook(null)
-    console.log("handlerButtonClose")
-}
-
-
-const heandelClickCloseModal = () =>{
-    {
-        flgDetailsInfoBook &&
-            setFlgDetailsInfoBook(false)
-            setDetailsInfoBook(null)
+    const handlerButtonClose = ():void => {
+        closeModalBook()
     }
-}
 
-const detailViewBook = (book:apiBook):any =>{
-    setFlgDetailsInfoBook(true)
-    setDetailsInfoBook(book)
-    console.log(book)
-}
-    return(
-        <div className="main" >
-            <div className="header" >
-                <Header apiBookSearch={apiBookSearch} handlerSearchTextOnChange={handlerSearchTextOnChange} handlerButtonClick={handlerButtonClick}/>
-            </div >
-            <div className="mainContent">
-                {
-                    apiBookSearch ?
-                    <div className="BooksListArr">{
-                        apiBookSearch.map((book:apiBook) => {
-                            return <BooksList detailViewBook={detailViewBook} apiBookSearch={book} key={book.id}></BooksList>
-                        })
-                    }                     
-                    </div>
-                    :
-                    <div className="mainBlock">                       
-                        <div className="searchBlock">
-                            <SearchText handlerSearchTextOnChange={handlerSearchTextOnChange}></SearchText>
-                            <Button text="Find" handlerButtonClick={handlerButtonClick}></Button>
+
+    const heandelClickCloseModal = ():void =>{
+        {
+            boolClickBook &&
+                closeModalBook()
+        }
+    }
+
+    const detailViewBook = (book:apiBook):void =>{
+        dispatch(openModal())
+        dispatch(ditalBookApi(book))
+
+    }
+
+        return(
+            <div className="main" >
+                <div className="header" >
+                    <Header handlerButtonClick={handlerButtonClick}/>
+                </div >
+                <div className="mainContent">
+
+                    {
+                        valueApi ?
+                        <div className="BooksListArr">{
+                            valueApi.map((book:apiBook) => {
+                                return <BooksList detailViewBook={detailViewBook} apiBookSearch={book} key={book.id}></BooksList>
+                            })
+                        }                     
                         </div>
-                    </div>
-                }
-            </div> 
-
-            {
-                detailsInfoBook 
-                &&    
-                <div>
-                    <div className="closeModal" onClick={heandelClickCloseModal}></div>
-                    <div className="viewDetailInfoBook">                       
-                        <Bookinfo apiBookSearchProps = {detailsInfoBook} handlerButtonClose={handlerButtonClose}></Bookinfo>
-                    </div> 
+                        :
+                        <div className="mainBlock">                       
+                            <div className="searchBlock">
+                                <SearchText handlerButtonClick={handlerButtonClick}></SearchText>
+                                <Button text="Find" handlerButtonClick={handlerButtonClick}></Button>
+                            </div>
+                        </div>
+                    }
                 </div> 
-            }       
-        </div>
+
+                {
+                    ditalBook 
+                    &&    
+                    <div>
+                        <div className="closeModal" onClick={heandelClickCloseModal}></div>
+                        <div className="viewDetailInfoBook">                       
+                            <Bookinfo handlerButtonClose={handlerButtonClose}></Bookinfo>
+                        </div> 
+                    </div> 
+                }       
+            </div>
     )
 }

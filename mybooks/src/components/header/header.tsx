@@ -4,12 +4,13 @@ import './header.css';
 import { Button } from "../button/button.tsx";
 // @ts-ignore
 import { SearchText } from "../searchText/searchText.tsx";
+import { UseSelector, useSelector } from "react-redux/es/hooks/useSelector";
+import { inboundApiBookReducers1 } from "../../redux/AllReducers/inboundApiBookReducers1.ts";
 type Props = {
-    handlerSearchTextOnChange: any
-    handlerButtonClick:any
-    apiBookSearch:any
+    handlerButtonClick:() => void | undefined
 }
-export const Header:React.FC<Props> = ({handlerSearchTextOnChange,handlerButtonClick,apiBookSearch}:Props) =>{
+export const Header:React.FC<Props> = ({handlerButtonClick}:Props) =>{
+    const valueApi = useSelector((state:any) => state.inboundApiBookReducers1.valueApiBooks)
     return(
         <div className="headerMain">
             <div className="headerText">
@@ -17,10 +18,10 @@ export const Header:React.FC<Props> = ({handlerSearchTextOnChange,handlerButtonC
             </div>
         <div>
             {
-                apiBookSearch
+                valueApi
                 &&
                 <div className="headerSearch">
-                    <SearchText handlerSearchTextOnChange={handlerSearchTextOnChange}></SearchText>
+                    <SearchText handlerButtonClick={handlerButtonClick} ></SearchText>
                     <Button text="Find" handlerButtonClick={handlerButtonClick}></Button>
                 </div>
             }

@@ -1,7 +1,11 @@
 import React from "react"
 import './booksList.css';
+import { useAppDispatch } from "../../hook";
+import { ditalBookApi } from "../../redux/action";
 
-interface apiBook {
+type obj  = []
+
+interface apiBook extends obj {
     items:Number;
     id:string; 
     searchInfo:{
@@ -14,9 +18,9 @@ interface apiBook {
         description:string;     //большое описание
         language:string;        //язык
         imageLinks:{
-            smallThumbnail:string;  //маленькая картиника
-            thumbnail:string;       //большая картиника
-        };
+            smallThumbnail:string ;  //маленькая картиника
+            thumbnail?:string;       //большая картиника
+        } ;
         publishedDate:string;       //Дата публикации
         title:string;               //Название книги
     };
@@ -24,14 +28,14 @@ interface apiBook {
 
 type Props= {
     apiBookSearch:apiBook,
-    detailViewBook:any,
+    detailViewBook:Function,
 }
 export const BooksList = ({apiBookSearch,detailViewBook}:Props) => {
 
-    const heandelClicklBooksList = (e) => {
+    const heandelClicklBooksList = ():void => {
         detailViewBook(apiBookSearch);
-        console.log(apiBookSearch)
     }
+    
     if(!apiBookSearch) {
         return (
         <> </>
@@ -41,11 +45,18 @@ export const BooksList = ({apiBookSearch,detailViewBook}:Props) => {
         apiBookSearch.volumeInfo.title.split("").slice(0,16).join("")
     }
     return(
-        <div className="BooksList" onClick={heandelClicklBooksList}>
+        
+        <div className="BooksList" onClick={((heandelClicklBooksList))}>
             {
-                apiBookSearch.volumeInfo.imageLinks.thumbnail 
-                && 
-                <img className="imgBook" src={apiBookSearch.volumeInfo.imageLinks.thumbnail}></img>
+                apiBookSearch.volumeInfo.imageLinks
+                ? 
+                <img className="imgBook" 
+                    src={apiBookSearch.volumeInfo.imageLinks.thumbnail}>
+                </img>
+                :
+                <img className="imgBook">
+                    
+                </img>
             }
             <div className="bookTitle">
                 {   

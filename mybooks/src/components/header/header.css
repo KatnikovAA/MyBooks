@@ -23,7 +23,10 @@
     margin-left:600px;
    
 }
-
+.headerSearch > .button{
+    margin-top: 5px;
+    padding: 5px;
+}
 .header{
     display: flex;
     background-color: rgb(31, 31, 33); 
@@ -31,19 +34,3 @@
     height: 75px;
 }
 
-
-
-.headerSearch.searchText{
-    font-family: inherit;
-    width: 500px;
-    border: 0;
-    border-bottom: 2px solid white;
-    outline: 0;
-    font-size: 1.3rem;
-    color: white;
-    background: transparent;
-    }
-    
-.header.searchText::placeholder {
-        color: #ababab ;
-      }

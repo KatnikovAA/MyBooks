@@ -2,6 +2,7 @@ import React from "react"
 import './bookinfo.css';
 // @ts-ignore
 import { Button } from "../button/button.tsx";
+import { UseSelector, useSelector } from "react-redux/es/hooks/useSelector";
 
 type obj  = []
 
@@ -28,11 +29,13 @@ interface apiBook extends obj {
 }
 
 type Props= {
-    apiBookSearchProps:apiBook,
-    handlerButtonClose?:any
+   // apiBookSearchProps?:apiBook,
+    handlerButtonClose?:() => void | undefined
 }
 
-export const Bookinfo:React.FC<Props> = ({apiBookSearchProps,handlerButtonClose}:Props) =>{
+export const Bookinfo:React.FC<Props> = ({handlerButtonClose}:Props) =>{
+    const apiBookSearchProps = useSelector((state:any)=> state.ditalBookReducers.ditalBook)
+    
     return(
         <div className="detailsBookValue">
             <div className="detailsImgBook">
